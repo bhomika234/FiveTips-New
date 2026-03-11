@@ -83,6 +83,7 @@ export const Navigation = () => {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
+      initialRouteName="Main"
     >
     
       <Stack.Screen name="Intro" component={Intro} />

@@ -8,11 +8,14 @@ import {
   Image,
   TextInput,
   FlatList,
+  Dimensions,
 } from "react-native";
 import { Screen } from "../../Components";
 import { colors, spacing } from "../../theme";
 import { Images } from "../../assets/Images";
 import { Ionicons } from "@expo/vector-icons";
+
+const { width } = Dimensions.get("window");
 
 interface Property {
   id: string;
@@ -24,45 +27,29 @@ interface Property {
   beds: number;
   baths: number;
   sqft: string;
-  isFavorite?: boolean;
+  category?: string;
 }
 
 const mockProperties: Property[] = [
-  {
-    id: "1",
-    title: "Modern Apartment",
-    price: "$2,500/month",
-    location: "Downtown, NY",
-    rating: 4.8,
-    image: Images.bg,
-    beds: 2,
-    baths: 2,
-    sqft: "1,200",
-  },
-  {
-    id: "2", 
-    title: "Luxury Villa",
-    price: "$5,000/month",
-    location: "Beverly Hills, CA",
-    rating: 4.9,
-    image: Images.bg1,
-    beds: 4,
-    baths: 3,
-    sqft: "3,500",
-  },
-  {
-    id: "3",
-    title: "Cozy Studio",
-    price: "$1,200/month", 
-    location: "Brooklyn, NY",
-    rating: 4.5,
-    image: Images.bg3,
-    beds: 1,
-    baths: 1,
-    sqft: "600",
-  },
+  { id: "1", title: "2 Bedroom Apartment", price: "$150", location: "Downtown", rating: 4.8, image: Images.bg1, beds: 2, baths: 2, sqft: "1200" },
+  { id: "2", title: "Luxury Villa", price: "$150,000", location: "Suburban", rating: 4.9, image: Images.bg1, beds: 4, baths: 3, sqft: "3500" },
+  { id: "3", title: "Maisonette", price: "$2,000", location: "City Center", rating: 4.5, image: Images.bg3, beds: 3, baths: 2, sqft: "1500" },
 ];
 
+// --- Sub-Components for Sections ---
+
+// 1. Best for You (Small cards with overlay)
+const BestForYouCard = ({ item }: { item: Property }) => (
+  <TouchableOpacity style={styles.bestCard}>
+    <Image source={item.image} style={styles.bestImage} />
+    <View style={styles.bestOverlay}>
+      <Text style={styles.bestPriceText}>{item.price}/City</Text>
+      <Ionicons name="heart-outline" size={18} color="white" />
+    </View>
+  </TouchableOpacity>
+);
+
+// 2. Top Rated (Card with icon row)
 const PropertyCard = ({ property, onPress }: { property: Property; onPress: () => void }) => (
   <TouchableOpacity style={styles.propertyCard} onPress={onPress}>
     <Image source={property.image} style={styles.propertyImage} />
@@ -86,262 +73,185 @@ const PropertyCard = ({ property, onPress }: { property: Property; onPress: () =
   </TouchableOpacity>
 );
 
-export function Home(props: any) {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
-
-  const categories = ["All", "House", "Apartment", "Villa", "Studio"];
-
-  const renderPropertyItem = ({ item }: { item: Property }) => (
-    <PropertyCard 
-      property={item} 
-      onPress={() => props.navigation.navigate("Details", { propertyId: item.id })}
-    />
-  );
-
-  return (
-    <Screen preset="fixed" contentContainerStyle={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.searchContainer}>
-          <Ionicons name="search" size={20} color="#666" style={styles.searchIcon} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search location, property type..."
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
+// Top Rated Card Component
+const TopRatedCard = ({ item }: { item: Property }) => (
+  <TouchableOpacity style={styles.topRatedCard}>
+    <Image source={item.image} style={styles.topRatedImage} />
+    <View style={styles.iconRow}>
+      {[1, 2, 3, 4].map((i) => (
+        <View key={i} style={styles.iconCircle}>
+          <Ionicons name="home" size={16} color="#292766" />
         </View>
-        <TouchableOpacity style={styles.filterButton}>
-          <Ionicons name="filter" size={20} color="#292766" />
+      ))}
+    </View>
+    <View style={styles.topRatedInfo}>
+      <Text style={styles.propertyTitle}>{item.title}</Text>
+      <Text style={styles.propertySub}>{item.location}</Text>
+      <Text style={styles.mainPrice}>{item.price}</Text>
+    </View>
+  </TouchableOpacity>
+);
+
+// 3. Special Offers (Horizontal row layout)
+const SpecialOfferCard = ({ item }: { item: Property }) => (
+  <View style={styles.offerCard}>
+    <Image source={item.image} style={styles.offerImage} />
+    <View style={styles.offerInfo}>
+      <Text style={styles.offerTitle} numberOfLines={2}>Book our luxury villa for 2 days and get stay of 1 more night for free</Text>
+      <Text style={styles.offerSub}>{item.beds} Beds, 2 Guests</Text>
+      <Text style={styles.offerPrice}>$150000</Text>
+    </View>
+  </View>
+);
+
+export function Home(props: any) {
+  return (
+    <Screen preset="scroll" contentContainerStyle={styles.container}>
+      {/* Search Header */}
+      <View style={styles.header}>
+        <View style={styles.searchBar}>
+          <TextInput placeholder="Search" style={styles.searchInput} />
+          <Ionicons name="chevron-forward" size={18} color="#CCC" />
+        </View>
+        <TouchableOpacity style={styles.filterBtn}>
+          <Ionicons name="options-outline" size={24} color="white" />
         </TouchableOpacity>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Categories */}
-        <ScrollView 
+      {/* Sections */}
+      <View style={styles.content}>
+        
+        <SectionTitle title="Best for you" />
+        <FlatList 
           horizontal 
+          data={mockProperties} 
+          renderItem={({item}) => <BestForYouCard item={item} />} 
           showsHorizontalScrollIndicator={false}
-          style={styles.categoriesContainer}
-        >
-          {categories.map((category) => (
-            <TouchableOpacity
-              key={category}
-              style={[
-                styles.categoryButton,
-                selectedCategory === category && styles.categoryButtonActive
-              ]}
-              onPress={() => setSelectedCategory(category)}
-            >
-              <Text style={[
-                styles.categoryText,
-                selectedCategory === category && styles.categoryTextActive
-              ]}>
-                {category}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+        />
 
-        {/* Best for you */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Best for you</Text>
-          <FlatList
-            data={mockProperties.slice(0, 2)}
-            renderItem={renderPropertyItem}
-            keyExtractor={(item) => item.id}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.horizontalList}
-          />
-        </View>
+        <SectionTitle title="Top Rated" />
+        <FlatList 
+          horizontal 
+          data={mockProperties} 
+          renderItem={({item}) => <TopRatedCard item={item} />} 
+          showsHorizontalScrollIndicator={false}
+        />
 
-        {/* Top Rated */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Top Rated</Text>
-          <FlatList
-            data={mockProperties.slice(1, 3)}
-            renderItem={renderPropertyItem}
-            keyExtractor={(item) => item.id}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.horizontalList}
-          />
-        </View>
+        <SectionTitle title="Special Offers" />
+        {mockProperties.map(item => <SpecialOfferCard key={item.id} item={item} />)}
 
-        {/* Special Offers */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Special Offers</Text>
-          {mockProperties.map((property) => (
-            <PropertyCard 
-              key={property.id}
-              property={property}
-              onPress={() => props.navigation.navigate("Details", { propertyId: property.id })}
-            />
-          ))}
-        </View>
-
-        {/* Trending Properties */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Trending Properties</Text>
-          <FlatList
-            data={mockProperties}
-            renderItem={renderPropertyItem}
-            keyExtractor={(item) => item.id}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.horizontalList}
-          />
-        </View>
-      </ScrollView>
+        <SectionTitle title="Trending properties" />
+        <FlatList 
+          horizontal 
+          data={mockProperties} 
+          renderItem={({item}) => (
+            <View style={{marginRight: 15, alignItems: 'center'}}>
+              <Image source={item.image} style={styles.trendingImage} />
+              <Text style={styles.trendingText}>Maisonette</Text>
+            </View>
+          )} 
+          showsHorizontalScrollIndicator={false}
+        />
+      </View>
     </Screen>
   );
 }
 
+const SectionTitle = ({ title }: { title: string }) => (
+  <View style={styles.sectionHeader}>
+    <Text style={styles.sectionTitle}>{title}</Text>
+    <TouchableOpacity><Text style={styles.viewAll}>View All</Text></TouchableOpacity>
+  </View>
+);
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F8F9FA",
+  container: { flex: 1, backgroundColor: "#F9FAFF" },
+  header: { flexDirection: 'row', padding: 20, alignItems: 'center' },
+  searchBar: {
+    flex: 1, backgroundColor: 'white', borderRadius: 10, 
+    flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15,
+    height: 50, marginRight: 10, borderWidth: 1, borderColor: '#EEE'
   },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    backgroundColor: colors.white,
-    shadowColor: "#000",
+  searchInput: { flex: 1, fontSize: 16 },
+  filterBtn: { 
+    backgroundColor: '#292766', width: 50, height: 50, 
+    borderRadius: 12, justifyContent: 'center', alignItems: 'center' 
+  },
+  content: { paddingHorizontal: 20 },
+  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: 15 },
+  sectionTitle: { fontSize: 18, fontWeight: 'bold', color: '#292766' },
+  viewAll: { fontSize: 12, color: '#AAA' },
+
+  // Best For You Styles
+  bestCard: { width: 150, height: 100, marginRight: 15, borderRadius: 15, overflow: 'hidden' },
+  bestImage: { width: '100%', height: '100%' },
+  bestOverlay: { 
+    position: 'absolute', bottom: 0, width: '100%', flexDirection: 'row', 
+    justifyContent: 'space-between', padding: 10, backgroundColor: 'rgba(0,0,0,0.2)' 
+  },
+  bestPriceText: { color: 'white', fontSize: 10, fontWeight: 'bold' },
+
+  // Top Rated Styles
+  topRatedCard: { width: 220, backgroundColor: 'white', borderRadius: 20, marginRight: 15, padding: 10 },
+  topRatedImage: { width: '100%', height: 150, borderRadius: 15 },
+  iconRow: { flexDirection: 'row', marginTop: -20, justifyContent: 'center' },
+  iconCircle: { 
+    backgroundColor: 'white', width: 30, height: 30, borderRadius: 15, 
+    justifyContent: 'center', alignItems: 'center', marginHorizontal: 2,
+    elevation: 3, shadowOpacity: 0.1
+  },
+  topRatedInfo: { marginTop: 10 },
+  propertyTitle: { fontWeight: 'bold', color: '#292766' },
+  propertySub: { color: '#AAA', fontSize: 10 },
+  mainPrice: { alignSelf: 'flex-end', fontWeight: 'bold', color: '#292766', marginTop: -15 },
+
+  // Special Offers Styles
+  offerCard: { flexDirection: 'row', backgroundColor: 'white', borderRadius: 15, padding: 10, marginBottom: 15 },
+  offerImage: { width: 80, height: 80, borderRadius: 10 },
+  offerInfo: { flex: 1, marginLeft: 15, justifyContent: 'space-between' },
+  offerTitle: { fontSize: 12, fontWeight: '600', color: '#292766' },
+  offerSub: { fontSize: 10, color: '#AAA' },
+  offerPrice: { alignSelf: 'flex-end', fontWeight: 'bold', color: '#292766' },
+
+  // Trending
+  trendingImage: { width: 100, height: 100, borderRadius: 15 },
+  trendingText: { marginTop: 5, fontSize: 12, color: '#292766' },
+
+  // Property Card Styles
+  propertyCard: { 
+    width: 220, 
+    backgroundColor: 'white', 
+    borderRadius: 20, 
+    marginRight: 15, 
+    padding: 10,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 3
   },
-  searchContainer: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#F5F5F5",
-    borderRadius: 25,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    marginRight: spacing.sm,
+  propertyImage: { width: '100%', height: 150, borderRadius: 15 },
+  favoriteButton: { 
+    position: 'absolute', 
+    top: 10, 
+    right: 10, 
+    backgroundColor: 'white', 
+    width: 30, 
+    height: 30, 
+    borderRadius: 15, 
+    justifyContent: 'center', 
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2
   },
-  searchIcon: {
-    marginRight: spacing.sm,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: "#333",
-  },
-  filterButton: {
-    width: 45,
-    height: 45,
-    backgroundColor: "#F5F5F5",
-    borderRadius: 22.5,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  categoriesContainer: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  categoryButton: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    marginRight: spacing.sm,
-    backgroundColor: "#F5F5F5",
-    borderRadius: 20,
-  },
-  categoryButtonActive: {
-    backgroundColor: "#292766",
-  },
-  categoryText: {
-    fontSize: 14,
-    color: "#666",
-    fontWeight: "500",
-  },
-  categoryTextActive: {
-    color: colors.white,
-  },
-  section: {
-    marginTop: spacing.lg,
-    paddingHorizontal: spacing.md,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#292766",
-    marginBottom: spacing.md,
-  },
-  horizontalList: {
-    paddingRight: spacing.md,
-  },
-  propertyCard: {
-    backgroundColor: colors.white,
-    borderRadius: 12,
-    marginRight: spacing.md,
-    width: 280,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  propertyImage: {
-    width: "100%",
-    height: 180,
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
-    resizeMode: "cover",
-  },
-  favoriteButton: {
-    position: "absolute",
-    top: 10,
-    right: 10,
-    width: 30,
-    height: 30,
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
-    borderRadius: 15,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  propertyInfo: {
-    padding: spacing.md,
-  },
-  propertyTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: spacing.xs,
-  },
-  propertyPrice: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#292766",
-    marginBottom: spacing.xs,
-  },
-  propertyLocation: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: spacing.sm,
-  },
-  propertyDetails: {
-    flexDirection: "row",
-    marginBottom: spacing.sm,
-  },
-  propertyDetail: {
-    fontSize: 12,
-    color: "#666",
-    marginRight: spacing.md,
-  },
-  ratingContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  rating: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: "#333",
-    marginLeft: spacing.xs,
-  },
+  propertyInfo: { marginTop: 10 },
+  propertyPrice: { fontSize: 16, fontWeight: 'bold', color: '#292766', marginTop: 5 },
+  propertyLocation: { fontSize: 12, color: '#AAA', marginTop: 2 },
+  propertyDetails: { flexDirection: 'row', marginTop: 8 },
+  propertyDetail: { fontSize: 10, color: '#666', marginRight: 10 },
+  ratingContainer: { flexDirection: 'row', alignItems: 'center', marginTop: 8 },
+  rating: { fontSize: 12, color: '#666', marginLeft: 4 }
 });
