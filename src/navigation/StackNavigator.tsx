@@ -33,6 +33,10 @@ export type StackParamList = {
 
 type TabParamList = {
   Home: undefined;
+  Favorites: undefined;
+  BookNow: undefined;
+  Notification: undefined;
+  Chat: undefined;
   Profile: undefined;
 };
 
@@ -46,11 +50,30 @@ const Tabs = () => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarStyle: { backgroundColor: colors.white },
-        tabBarActiveTintColor: colors.primary,
+        tabBarStyle: { 
+          backgroundColor: '#292766',
+          height: 90,
+          paddingBottom: 15,
+          paddingTop: 15,
+          paddingHorizontal: 10,
+          borderRadius: 0,
+          elevation: 12,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: -4 },
+          shadowOpacity: 0.15,
+          shadowRadius: 8,
+          borderTopWidth: 0,
+        },
+        tabBarActiveTintColor: '#FFFFFF',
+        tabBarInactiveTintColor: '#FFFFFF80',
         tabBarLabelStyle: {
           fontFamily: typography.fonts.poppins.bold,
-          fontSize: 13,
+          fontSize: 12,
+          marginTop: 8,
+        },
+        tabBarItemStyle: {
+          paddingVertical: 8,
+          paddingHorizontal: 5,
         },
       }}
     >
@@ -58,8 +81,53 @@ const Tabs = () => {
         name="Home"
         component={HomeScreen}
         options={{
+          tabBarLabel: "Home",
           tabBarIcon: ({ color }) => (
-            <Ionicons name="home" size={24} color={color} />
+            <Ionicons name="home" size={28} color={color} />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="Favorites"
+        component={HomeScreen}
+        options={{
+          tabBarLabel: "Favorites",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="heart" size={28} color={color} />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="BookNow"
+        component={HomeScreen}
+        options={{
+          tabBarLabel: "Book now",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="calendar" size={28} color={color} />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="Notification"
+        component={HomeScreen}
+        options={{
+          tabBarLabel: "Notification",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="notifications" size={28} color={color} />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="Chat"
+        component={HomeScreen}
+        options={{
+          tabBarLabel: "Chat",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="chatbubble" size={28} color={color} />
           ),
         }}
       />
@@ -68,8 +136,9 @@ const Tabs = () => {
         name="Profile"
         component={Profile}
         options={{
+          tabBarLabel: "Profile",
           tabBarIcon: ({ color }) => (
-            <Ionicons name="person" size={24} color={color} />
+            <Ionicons name="person" size={28} color={color} />
           ),
         }}
       />

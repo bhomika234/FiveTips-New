@@ -1,4 +1,4 @@
-export const Images = {
+export const Images: { [key: string]: any } = {
   headerback: require("./headerback.svg"),
   emailbox: require("./emaibox.svg"),
   apple: require("./apple.svg"),
@@ -16,4 +16,17 @@ export const Images = {
   slide1: require("./slide1.png"),
   slide2: require("./slide2.png"),
   slide3: require("./slide3.png"),
+  wifi: require("./Wifi (1).png"),
+  location: require("./location_on (2).png"),
+  heart: require("./Heart (1).png"),
+  car: require("./directions_car (1).png"),
+  rectangle127: require("./Rectangle 127 (2).png"),
+  rectangle129: require("./Rectangle 129 (1).png"),
+  rectangle44: require("./Rectangle 44.png"),
+  rectangle45: require("./Rectangle 45 (1).png"),
+  rectangle48: require("./Rectangle 48.png"),
+  rectangle52: require("./Rectangle 52 (1).png"),
+  rectangle54: require("./Rectangle 54 (1).png"),
+  rectangle55: require("./Rectangle 55 (1).png"),
+  rectangle56: require("./Rectangle 56.png"),
 };

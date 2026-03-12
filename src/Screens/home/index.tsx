@@ -42,20 +42,40 @@ const mockProperties: Property[] = [
 const BestForYouCard = ({ item }: { item: Property }) => (
   <TouchableOpacity style={styles.bestCard}>
     <Image source={item.image} style={styles.bestImage} />
+    <TouchableOpacity style={styles.smallHeartIcon}>
+       <Ionicons name="heart-outline" size={18} color="white" />
+    </TouchableOpacity>
     <View style={styles.bestOverlay}>
       <Text style={styles.bestPriceText}>{item.price}/City</Text>
-      <Ionicons name="heart-outline" size={18} color="white" />
     </View>
   </TouchableOpacity>
 );
+
 
 // 2. Top Rated (Card with icon row)
 const PropertyCard = ({ property, onPress }: { property: Property; onPress: () => void }) => (
   <TouchableOpacity style={styles.propertyCard} onPress={onPress}>
     <Image source={property.image} style={styles.propertyImage} />
     <TouchableOpacity style={styles.favoriteButton}>
-      <Ionicons name="heart-outline" size={20} color="#FF6B6B" />
+      <Ionicons name="heart-outline" size={20} color="#5b5bd4" />
     </TouchableOpacity>
+    
+    {/* Icons on top of image */}
+    <View style={styles.amenitiesRow}>
+      <View style={styles.amenityIcon}>
+        <Image source={Images.wifi} style={styles.amenityImage} />
+      </View>
+      <View style={styles.amenityIcon}>
+        <Image source={Images.location} style={styles.amenityImage} />
+      </View>
+      <View style={styles.amenityIcon}>
+        <Image source={Images.heart} style={styles.amenityImage} />
+      </View>
+      <View style={styles.amenityIcon}>
+        <Image source={Images.car} style={styles.amenityImage} />
+      </View>
+    </View>
+
     <View style={styles.propertyInfo}>
       <Text style={styles.propertyTitle}>{property.title}</Text>
       <Text style={styles.propertyPrice}>{property.price}</Text>
@@ -66,7 +86,7 @@ const PropertyCard = ({ property, onPress }: { property: Property; onPress: () =
         <Text style={styles.propertyDetail}>{property.sqft} sqft</Text>
       </View>
       <View style={styles.ratingContainer}>
-        <Ionicons name="star" size={16} color="#FFD700" />
+        <Ionicons name="star" size={16} color="#292766" />
         <Text style={styles.rating}>{property.rating}</Text>
       </View>
     </View>
@@ -77,30 +97,30 @@ const PropertyCard = ({ property, onPress }: { property: Property; onPress: () =
 const TopRatedCard = ({ item }: { item: Property }) => (
   <TouchableOpacity style={styles.topRatedCard}>
     <Image source={item.image} style={styles.topRatedImage} />
-    <View style={styles.iconRow}>
-      {[1, 2, 3, 4].map((i) => (
-        <View key={i} style={styles.iconCircle}>
-          <Ionicons name="home" size={16} color="#292766" />
-        </View>
-      ))}
-    </View>
     <View style={styles.topRatedInfo}>
       <Text style={styles.propertyTitle}>{item.title}</Text>
       <Text style={styles.propertySub}>{item.location}</Text>
       <Text style={styles.mainPrice}>{item.price}</Text>
     </View>
+    <View style={styles.iconRow}>
+      {[1, 2, 3, 4].map((i) => (
+        <View key={i} style={styles.iconCircle}>
+          <Ionicons name="home" size={15} color="#292766" />
+        </View>
+      ))}
+    </View>
   </TouchableOpacity>
 );
 
-// 3. Special Offers (Horizontal row layout)
+// 3. Special Offers (Horizontal Row layout)
 const SpecialOfferCard = ({ item }: { item: Property }) => (
   <View style={styles.offerCard}>
     <Image source={item.image} style={styles.offerImage} />
-    <View style={styles.offerInfo}>
+    <View style={styles.offerContent}>
       <Text style={styles.offerTitle} numberOfLines={2}>Book our luxury villa for 2 days and get stay of 1 more night for free</Text>
-      <Text style={styles.offerSub}>{item.beds} Beds, 2 Guests</Text>
-      <Text style={styles.offerPrice}>$150000</Text>
+      <Text style={styles.offerSub}>{item.beds} Beds, {item.baths} Guests</Text>
     </View>
+    <Text style={styles.offerPrice}>{item.price}</Text>
   </View>
 );
 
@@ -111,7 +131,7 @@ export function Home(props: any) {
       <View style={styles.header}>
         <View style={styles.searchBar}>
           <TextInput placeholder="Search" style={styles.searchInput} />
-          <Ionicons name="chevron-forward" size={18} color="#CCC" />
+          <Ionicons name="chevron-forward" size={18} color="#f3efef" />
         </View>
         <TouchableOpacity style={styles.filterBtn}>
           <Ionicons name="options-outline" size={24} color="white" />
@@ -133,7 +153,7 @@ export function Home(props: any) {
         <FlatList 
           horizontal 
           data={mockProperties} 
-          renderItem={({item}) => <TopRatedCard item={item} />} 
+          renderItem={({item}) => <PropertyCard property={item} onPress={() => console.log('Property pressed:', item.title)} />} 
           showsHorizontalScrollIndicator={false}
         />
 
@@ -144,12 +164,7 @@ export function Home(props: any) {
         <FlatList 
           horizontal 
           data={mockProperties} 
-          renderItem={({item}) => (
-            <View style={{marginRight: 15, alignItems: 'center'}}>
-              <Image source={item.image} style={styles.trendingImage} />
-              <Text style={styles.trendingText}>Maisonette</Text>
-            </View>
-          )} 
+          renderItem={({item}) => <PropertyCard property={item} onPress={() => console.log('Trending property pressed:', item.title)} />} 
           showsHorizontalScrollIndicator={false}
         />
       </View>
@@ -165,7 +180,7 @@ const SectionTitle = ({ title }: { title: string }) => (
 );
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F9FAFF" },
+  container: {  backgroundColor: "#F9FAFF" },
   header: { flexDirection: 'row', padding: 20, alignItems: 'center' },
   searchBar: {
     flex: 1, backgroundColor: 'white', borderRadius: 10, 
@@ -190,11 +205,22 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between', padding: 10, backgroundColor: 'rgba(0,0,0,0.2)' 
   },
   bestPriceText: { color: 'white', fontSize: 10, fontWeight: 'bold' },
+  smallHeartIcon: { 
+    position: 'absolute', 
+    top: 10, 
+    right: 10, 
+    backgroundColor: 'rgba(0,0,0,0.3)', 
+    width: 30, 
+    height: 30, 
+    borderRadius: 15, 
+    justifyContent: 'center', 
+    alignItems: 'center' 
+  },
 
-  // Top Rated Styles
+  
   topRatedCard: { width: 220, backgroundColor: 'white', borderRadius: 20, marginRight: 15, padding: 10 },
   topRatedImage: { width: '100%', height: 150, borderRadius: 15 },
-  iconRow: { flexDirection: 'row', marginTop: -20, justifyContent: 'center' },
+  iconRow: { flexDirection: 'row', marginTop: -10, justifyContent: 'center' },
   iconCircle: { 
     backgroundColor: 'white', width: 30, height: 30, borderRadius: 15, 
     justifyContent: 'center', alignItems: 'center', marginHorizontal: 2,
@@ -205,13 +231,25 @@ const styles = StyleSheet.create({
   propertySub: { color: '#AAA', fontSize: 10 },
   mainPrice: { alignSelf: 'flex-end', fontWeight: 'bold', color: '#292766', marginTop: -15 },
 
-  // Special Offers Styles
-  offerCard: { flexDirection: 'row', backgroundColor: 'white', borderRadius: 15, padding: 10, marginBottom: 15 },
+  
+  offerCard: { 
+    width: '100%', 
+    flexDirection: 'row', 
+    backgroundColor: 'white', 
+    borderRadius: 15, 
+    padding: 15, 
+    marginBottom: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3
+  },
   offerImage: { width: 80, height: 80, borderRadius: 10 },
-  offerInfo: { flex: 1, marginLeft: 15, justifyContent: 'space-between' },
-  offerTitle: { fontSize: 12, fontWeight: '600', color: '#292766' },
+  offerContent: { flex: 1, marginLeft: 15, justifyContent: 'center' },
+  offerTitle: { fontSize: 12, fontWeight: '600', color: '#292766', marginBottom: 5 },
   offerSub: { fontSize: 10, color: '#AAA' },
-  offerPrice: { alignSelf: 'flex-end', fontWeight: 'bold', color: '#292766' },
+  offerPrice: { fontSize: 14, fontWeight: 'bold', color: '#292766', alignSelf: 'flex-start' },
 
   // Trending
   trendingImage: { width: 100, height: 100, borderRadius: 15 },
@@ -219,10 +257,10 @@ const styles = StyleSheet.create({
 
   // Property Card Styles
   propertyCard: { 
-    width: 220, 
+    width: '100%', 
     backgroundColor: 'white', 
     borderRadius: 20, 
-    marginRight: 15, 
+    marginBottom: 15, 
     padding: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -230,7 +268,31 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3
   },
-  propertyImage: { width: '100%', height: 150, borderRadius: 15 },
+  propertyImage: { width: '100%', height: 200, borderRadius: 15, resizeMode: 'cover' },
+  amenitiesRow: { 
+    flexDirection: 'row', 
+    marginTop: -20, 
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 180,
+    left: 0,
+    right: 0
+  },
+  amenityIcon: { 
+    backgroundColor: 'white', 
+    width: 30, 
+    height: 30, 
+    borderRadius: 15, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    marginHorizontal: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2
+  },
+  amenityImage: { width: 18, height: 18 },
   favoriteButton: { 
     position: 'absolute', 
     top: 10, 
