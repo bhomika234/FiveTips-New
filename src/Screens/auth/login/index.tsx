@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 import {
   TextInput,
   View,
@@ -21,10 +21,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { WithLocalSvg } from "react-native-svg/css";
 import Dropdown from "../../../Components/DropDown";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { UserContext } from "../../../context/UserContext";
 interface LoginScreenProps
   extends NativeStackScreenProps<any, "Login"> {}
 export function LoginScreen(props: LoginScreenProps) {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  const { login: loginUser } = useContext(UserContext);
   const authPasswordInput:any = useRef<TextInput>(null);
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true);
   const {
@@ -59,8 +61,8 @@ export function LoginScreen(props: LoginScreenProps) {
     { label: "Sub-Landlord", value: "sub_landlord" },
     { label: "Security", value: "security" },
   ];
-  const login: SubmitHandler<ILogin> = async (formData: ILogin) => {
-   navigation.navigate("Main");
+  const handleLogin: SubmitHandler<ILogin> = async (formData: ILogin) => {
+    loginUser();
   };
 
   return (
@@ -197,7 +199,7 @@ export function LoginScreen(props: LoginScreenProps) {
             preset="reversed"
             text="Login"
             disabled={!isFormValid }
-            onPress={handleSubmit(login)}
+            onPress={handleSubmit(handleLogin)}
             textStyle={{ color: colors.white }}
             style={[
               !isFormValid && styles.disabledButton,
@@ -241,7 +243,7 @@ export function LoginScreen(props: LoginScreenProps) {
           <Button
             preset="reversed"
             disabled={!isFormValid}
-            onPress={handleSubmit(login)}
+            onPress={handleSubmit(handleLogin)}
             text={"Continue with Google"}
             textStyle={{ color: colors.primary,paddingLeft:20,fontFamily:typography.fonts.poppins.normal }}
             LeftAccessory={() => <WithLocalSvg asset={Images.google} />}
@@ -259,7 +261,7 @@ export function LoginScreen(props: LoginScreenProps) {
           <Button
             preset="reversed"
             disabled={!isFormValid}
-            onPress={handleSubmit(login)}
+            onPress={handleSubmit(handleLogin)}
             text={"Continue with Facebook"}
             textStyle={{ color: colors.primary ,paddingLeft:20,fontFamily:typography.fonts.poppins.normal}}
             LeftAccessory={() => <WithLocalSvg asset={Images.facebook} />}

@@ -15,8 +15,7 @@ import { ContactSupport } from "./contactsupport";
 import { PrivacyPolicy } from "./privacypolicy";
 import { TermsConditions } from "./termsconditions";
 import { Subscription } from "./subscription";
-import  {Intro}  from "./auth/inro";
-
+import { Intro } from "./auth/inro";
 
 export {
   Splash,
@@ -38,5 +37,4 @@ export {
   PrivacyPolicy,
   TermsConditions,
   Subscription,
-  
 };
