@@ -16,4 +16,6 @@ export const Images = {
   slide1: require("./slide1.png"),
   slide2: require("./slide2.png"),
   slide3: require("./slide3.png"),
+  
+
 };

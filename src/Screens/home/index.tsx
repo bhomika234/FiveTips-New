@@ -165,7 +165,7 @@ const SectionTitle = ({ title }: { title: string }) => (
 );
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F9FAFF" },
+  container: {  backgroundColor: "#F9FAFF" },
   header: { flexDirection: 'row', padding: 20, alignItems: 'center' },
   searchBar: {
     flex: 1, backgroundColor: 'white', borderRadius: 10, 
