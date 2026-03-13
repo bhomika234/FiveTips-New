@@ -12,6 +12,7 @@ import { History } from "./history";
 import { Profile } from "./profile";
 import Details from "./details";
 import { ContactSupport } from "./contactsupport";
+import { TCS } from "./auth/tcs";
 import { PrivacyPolicy } from "./privacypolicy";
 import { TermsConditions } from "./termsconditions";
 import { Subscription } from "./subscription";

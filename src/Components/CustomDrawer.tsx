@@ -25,7 +25,7 @@ const navItems: NavItem[] = [
   { id: "4", label: "Filters", icon: "options-outline", route: "FilterSortScreen" }, // ✅ Added
   { id: "5", label: "About us", icon: "information-circle-outline", route: "AboutScreen" },
   { id: "6", label: "Help", icon: "cloud-outline", route: "HelpScreen" },
-  { id: "7", label: "Terms & conditions", icon: "document-text-outline", route: "TermsScreen" },
+  { id: "7", label: "Terms & conditions", icon: "document-text-outline", route: "TCS" },
   { id: "8", label: "Settings", icon: "settings-outline", route: "SettingsScreen" },
 ];
 

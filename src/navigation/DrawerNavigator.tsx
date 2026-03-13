@@ -20,6 +20,7 @@ import {
   DrawerNavigationProp,
 } from "@react-navigation/drawer";
 import { CustomDrawerContent } from "../Components/CustomDrawer";
+import { TCS } from "@/Screens/auth/tcs";
 const Tab = createBottomTabNavigator();
 
 const Drawer = createDrawerNavigator();
@@ -199,17 +200,17 @@ export function DrawerNavigator() {
           headerTintColor: "#FFFFFF",
         }}
       /> */}
-      {/* <Drawer.Screen
-        name="ContactSupportDrawer"
-        component={ContactSupport}
+      <Drawer.Screen
+        name="TCS"
+        component={TCS}
         options={{
-          title: "Contact Support",
+          title: "Terms & conditions",
           headerStyle: {
             backgroundColor: "#1A237E",
           },
           headerTintColor: "#FFFFFF",
         }}
-      /> */}
+      />
     </Drawer.Navigator>
   );
 }

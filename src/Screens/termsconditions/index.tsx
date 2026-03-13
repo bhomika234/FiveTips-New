@@ -1,11 +1,21 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  SafeAreaView,
+  StatusBar,
+} from "react-native";
 import { Screen, Text } from "../../Components";
 import { AppStackScreenProps } from "../../utils/interfaces";
-import { spacing } from "../../theme";
-interface TermsConditionsProps extends AppStackScreenProps<"ForgotPassword"> {}
+import { spacing, colors } from "../../theme";
+import { Ionicons } from "@expo/vector-icons";
+
+interface TermsConditionsProps extends AppStackScreenProps<"TermsConditions"> {}
 
 export function TermsConditions(props: TermsConditionsProps) {
+  const { navigation } = props;
   const today = new Date();
   const effectiveDate = today.toLocaleDateString(undefined, {
     year: "numeric",
@@ -181,85 +191,126 @@ export function TermsConditions(props: TermsConditionsProps) {
   ];
 
   return (
-    <Screen preset="auto" contentContainerStyle={styles.screenContentContainer}>
-      {/* <Text weight="bold" text="Terms & Conditions" style={styles._title} /> */}
-      {sections.map((sec, idx) => (
-        <View key={idx} style={styles._section}>
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFF" />
+
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="arrow-back" size={24} color="#1A1E44" />
+        </TouchableOpacity>
+        <Text
+          weight="bold"
+          text="Terms and conditions"
+          style={styles.headerTitle}
+        />
+        <View style={styles.headerSpacer} />
+      </View>
+
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Brand Name */}
+        <Text weight="bold" text="MyHomes" style={styles.brandName} />
+
+        {/* Content */}
+        <Text
+          weight="regular"
+          text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+          style={styles.contentText}
+        />
+
+        <Text
+          weight="regular"
+          text="Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo."
+          style={styles.contentText}
+        />
+
+        <Text
+          weight="regular"
+          text="Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem."
+          style={styles.contentText}
+        />
+
+        <Text
+          weight="regular"
+          text="Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"
+          style={styles.contentText}
+        />
+
+        {/* Original Terms Content */}
+        <View style={styles.originalContent}>
           <Text
-            weight="semiBold"
-            text={sec.title}
-            style={styles._sectionTitle}
+            weight="light"
+            style={styles._footer}
+            text="Note: These terms are effective as of today. By using MyHomes, you agree to these terms and conditions."
           />
-          {sec.body &&
-            sec.body.map((p, i) => (
-              <Text
-                key={i}
-                weight="medium"
-                text={p}
-                style={styles._paragraph}
-              />
-            ))}
-          {sec.bullets && (
-            <View style={styles._bullets}>
-              {sec.bullets.map((b, bi) => (
-                <View style={styles._bulletRow} key={bi}>
-                  <Text weight="bold" text="•" style={styles._dot} />
-                  <Text weight="medium" text={b} style={styles._bulletText} />
-                </View>
-              ))}
-            </View>
-          )}
         </View>
-      ))}
-      <Text
-        weight="light"
-        style={styles._footer}
-        text="Note: This template is provided for general informational purposes and does not constitute legal advice. Consult a qualified attorney to adapt these Terms for your specific business and jurisdiction."
-      />
-    </Screen>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  screenContentContainer: {
-    paddingHorizontal: spacing.md,
-    paddingBottom: 80,
-  },
-  _title: {
-    fontSize: 22,
-    marginTop: spacing.lg,
-  },
-  _section: {
-    marginTop: spacing.md,
-  },
-  _sectionTitle: {
-    fontSize: 16,
-  },
-  _paragraph: {
-    marginTop: spacing.xs,
-    lineHeight: 18,
-  },
-  _bullets: {
-    marginTop: spacing.xs,
-    gap: 6,
-  },
-  _bulletRow: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 8,
-  },
-  _dot: {
-    width: 12,
-    lineHeight: 18,
-  },
-  _bulletText: {
+  container: {
     flex: 1,
-    lineHeight: 18,
+    backgroundColor: "#FFF",
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#EEE",
+  },
+  backButton: {
+    padding: 8,
+  },
+  headerTitle: {
+    fontSize: 18,
+    color: "#1A1E44",
+    fontWeight: "600",
+  },
+  headerSpacer: {
+    width: 40,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    paddingBottom: 40,
+  },
+  brandName: {
+    fontSize: 28,
+    color: "#1A1E44",
+    marginBottom: 24,
+    fontWeight: "700",
+  },
+  contentText: {
+    fontSize: 15,
+    color: "#666",
+    lineHeight: 24,
+    marginBottom: 16,
+  },
+  originalContent: {
+    marginTop: 24,
+    paddingTop: 24,
+    borderTopWidth: 1,
+    borderTopColor: "#EEE",
   },
   _footer: {
-    marginTop: spacing.xl,
-    lineHeight: 16,
-    opacity: 0.7,
-    marginBottom: spacing.xl,
+    fontSize: 13,
+    lineHeight: 20,
+    color: "#999",
+    textAlign: "center",
   },
 });
