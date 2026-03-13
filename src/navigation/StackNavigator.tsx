@@ -2,6 +2,7 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+import { DrawerContentComponentProps } from "@react-navigation/drawer";
 
 import { colors, typography } from "../theme";
 import {
@@ -12,7 +13,10 @@ import {
   CreateAccount,
   ForgotPassword,
   ResetPassword,
+  FilterSortScreen,
+  NavBar,
 } from "../Screens";
+import { DrawerNavigator } from "./DrawerNavigator";
 
 export type StackParamList = {
   SplashScreen2: undefined;
@@ -28,6 +32,8 @@ export type StackParamList = {
   LogoScreen: undefined;
   Onboarding: undefined;
   ProfileScreen: undefined;
+  FilterSort: undefined;
+  NavBar: undefined;
   Main: undefined;
 };
 
@@ -146,6 +152,13 @@ const Tabs = () => {
   );
 };
 
+const NavBarWrapper = () => {
+  // Create minimal mock props for NavBar when used as standalone screen
+  const mockProps = {} as DrawerContentComponentProps;
+  
+  return <NavBar {...mockProps} />;
+};
+
 /* -------------------- MAIN NAVIGATION -------------------- */
 
 export const Navigation = () => {
@@ -160,7 +173,9 @@ export const Navigation = () => {
       <Stack.Screen name="CreateAccount" component={CreateAccount} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="ResetPassword" component={ResetPassword} />
-      <Stack.Screen name="Main" component={Tabs} />
+      <Stack.Screen name="FilterSort" component={FilterSortScreen} />
+      <Stack.Screen name="Main" component={DrawerNavigator} />
+      <Stack.Screen name="NavBar" component={NavBarWrapper} />
     </Stack.Navigator>
   );
 };

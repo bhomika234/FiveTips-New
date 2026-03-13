@@ -125,15 +125,23 @@ const SpecialOfferCard = ({ item }: { item: Property }) => (
 );
 
 export function Home(props: any) {
+  const { navigation } = props;
+  
   return (
     <Screen preset="scroll" contentContainerStyle={styles.container}>
       {/* Search Header */}
       <View style={styles.header}>
-        <View style={styles.searchBar}>
-          <TextInput placeholder="Search" style={styles.searchInput} />
+        <TouchableOpacity 
+          style={styles.searchBar}
+          onPress={() => navigation.navigate('FilterSort')}
+        >
+          <TextInput placeholder="Search" style={styles.searchInput} editable={false} />
           <Ionicons name="chevron-forward" size={18} color="#f3efef" />
-        </View>
-        <TouchableOpacity style={styles.filterBtn}>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.filterBtn}
+          onPress={() => navigation.navigate('FilterSort')}
+        >
           <Ionicons name="options-outline" size={24} color="white" />
         </TouchableOpacity>
       </View>

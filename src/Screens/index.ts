@@ -16,6 +16,8 @@ import { PrivacyPolicy } from "./privacypolicy";
 import { TermsConditions } from "./termsconditions";
 import { Subscription } from "./subscription";
 import  {Intro}  from "./auth/inro";
+import { FilterSortScreen } from "./auth/filter/sort";
+import { NavBar } from "./auth/Nav bar";
 
 
 export {
@@ -38,5 +40,7 @@ export {
   PrivacyPolicy,
   TermsConditions,
   Subscription,
+  FilterSortScreen,
+  NavBar,
   
 };
