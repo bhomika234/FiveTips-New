@@ -16,6 +16,7 @@
       "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
       "bundleIdentifier": "com.suneel.bullwise",
+      "usesAppleSignIn": true,
       "infoPlist": {
         "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera.",
         "ITSAppUsesNonExemptEncryption": false
@@ -44,9 +45,11 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "scheme": "bullwise",
     "plugins": [
       "expo-localization",
       "expo-font",
+      "expo-apple-authentication",
       [
         "expo-notifications",
         {

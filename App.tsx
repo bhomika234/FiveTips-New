@@ -10,6 +10,7 @@ import {
 import { UserProvider, UserContext } from "./src/context/UserContext";
 import { AppNavigator } from "./src/navigation/AppNavigator";
 import { LoginScreen } from "./src/Screens/index";
+import { HomeScreen } from "./src/index";
 
 // Simple loading component
 const SimpleLoader = () => {
@@ -46,7 +47,7 @@ function AppContent() {
   return user ? (
     <AppNavigator />
   ) : (
-    <LoginScreen navigation={undefined as any} route={undefined as any} />
+    <HomeScreen />
   );
 }
 
